@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "css-loader": "^5.2.6",
+    "dotenv": "^10.0.0",
     "file-loader": "^6.2.0",
     "html-loader": "^2.1.2",
     "less": "^4.1.1",

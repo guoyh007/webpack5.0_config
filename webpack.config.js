@@ -1,6 +1,9 @@
 const path = require("path");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+// 读取这个.env这个文件，把配置的key value写到process.env对象里边去
+require('dotenv').config({path: '.env'});
+console.log(process.env.NODE_ENV2);
 module.exports = {
   mode: 'development', // 开发模式
   devtool: false,
@@ -21,7 +24,14 @@ module.exports = {
         test: /\.css$/,
         use: [
           'style-loader', // css转化成js
-          'css-loader', // 即url import进行处理
+          // 'css-loader', // 即url import进行处理
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 1,
+              // module: true,
+            }
+          }
           // 'postcss-loader', // css 预处理器
         ]
       },

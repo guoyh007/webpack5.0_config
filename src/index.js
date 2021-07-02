@@ -1,4 +1,5 @@
-import './index.css';
+import styles from './index.css';
+console.log('styles: ', styles);
 import './index.less';
 import './index.scss';
 
