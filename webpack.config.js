@@ -7,14 +7,24 @@ console.log(process.env.NODE_ENV2);
 module.exports = {
   mode: 'development', // 开发模式
   devtool: false,
-  entry: './src/index.js',
+  // entry: './src/index.js',
+  entry: {
+    index: './src/index.js',
+    print: './src/print.js',
+  },
+  // output: {
+  //   path: path.resolve(__dirname, 'dist'),
+  //   filename: 'main.js',
+  //   // publicPath: "/assets/", // string
+  // },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'main.js',
-    // publicPath: "/assets/", // string
+    filename: '[name].bundle.js',
+    clean: true, // 每次打包前，清空dist目录下的文件；
   },
   plugins: [
     new HtmlWebpackPlugin({
+      title: '管理输出',
       template: './src/index.html',
     }),
   ],
@@ -29,9 +39,10 @@ module.exports = {
             loader: 'css-loader',
             options: {
               importLoaders: 1,
-              // module: true,
+              modules: true, // 这个单词容易写错，注意
+              // modules: false,
             }
-          }
+          },
           // 'postcss-loader', // css 预处理器
         ]
       },
@@ -61,17 +72,32 @@ module.exports = {
       //     }
       //   }]
       // },
+      // {
+      //   test: /\.(jpg|png|bmp|gif|svg)$/,
+      //   use: [{
+      //     loader: 'url-loader',
+      //     options: { 
+      //       esModule: false,
+      //       name: '[hash:10].[ext]', 
+      //       limit: 4 * 1024, // 以8k为分界线，如果图片小于8K就把图片变为base64字符串插入html，否则和file-loader作用一样
+      //     }
+      //   }]
+      // },
+
+      // * 现在都用 type: 'asset/resource' 这个东西
       {
-        test: /\.(jpg|png|bmp|gif|svg)$/,
-        use: [{
-          loader: 'url-loader',
-          options: { 
-            esModule: false,
-            name: '[hash:10].[ext]', 
-            limit: 4 * 1024, // 以8k为分界线，如果图片小于8K就把图片变为base64字符串插入html，否则和file-loader作用一样
-          }
-        }]
-      }
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        type: 'asset/resource',
+      },
+      //* 处理一些数据文件
+      {
+        test: /\.(csv|tsv)$/i,
+        use: ['csv-loader'],
+      },
+      {
+        test: /\.xml$/i,
+        use: ['xml-loader'],
+      },
     ]
   },
   // express启用一个https的服务，通过它可以访问产出的文件
