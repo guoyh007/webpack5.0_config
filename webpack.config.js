@@ -10,7 +10,6 @@ module.exports = {
   // entry: './src/index.js',
   entry: {
     index: './src/index.js',
-    another: './src/another-module.js',
   },
   // tag1配置：可以看到原来的index.bundle.js 和 another-bundle.js 原来分别有1.7万行的代码，现在只有600多行代码，只不过多了一个shared.bundle.js的文件
   // entry: {
@@ -31,13 +30,19 @@ module.exports = {
   // },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: '[name].bundle.js',
+    filename: '[name].[contenthash].js',
     clean: true, // 每次打包前，清空dist目录下的文件；
   },
   optimization: {
-    // runtimeChunk: 'single', // tag1配置
+    runtimeChunk: 'single', // tag1配置
     splitChunks: {
-      chunks: 'all',
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all',
+        },
+      },
     },
   },
   plugins: [
