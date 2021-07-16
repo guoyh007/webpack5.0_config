@@ -2,7 +2,7 @@ const path = require("path");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 // 读取这个.env这个文件，把配置的key value写到process.env对象里边去
-require('dotenv').config({path: '.env'});
+require('dotenv').config({ path: '.env' });
 console.log(process.env.NODE_ENV2);
 module.exports = {
   mode: 'development', // 开发模式
@@ -10,8 +10,20 @@ module.exports = {
   // entry: './src/index.js',
   entry: {
     index: './src/index.js',
-    print: './src/print.js',
+    another: './src/another-module.js',
   },
+  // tag1配置：可以看到原来的index.bundle.js 和 another-bundle.js 原来分别有1.7万行的代码，现在只有600多行代码，只不过多了一个shared.bundle.js的文件
+  // entry: {
+  //   index: {
+  //     import: './src/index.js',
+  //     dependOn: 'shared',
+  //   },
+  //   another: {
+  //     import: './src/another-module.js',
+  //     dependOn: 'shared',
+  //   },
+  //   shared: 'lodash',
+  // },
   // output: {
   //   path: path.resolve(__dirname, 'dist'),
   //   filename: 'main.js',
@@ -21,6 +33,12 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].bundle.js',
     clean: true, // 每次打包前，清空dist目录下的文件；
+  },
+  optimization: {
+    // runtimeChunk: 'single', // tag1配置
+    splitChunks: {
+      chunks: 'all',
+    },
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -102,7 +120,7 @@ module.exports = {
   },
   // express启用一个https的服务，通过它可以访问产出的文件
   devServer: {
-    // publicPath: '/',
+    publicPath: '/',
     // contentBase: path.join(__dirname, 'dist'), // 额外的静态文件目录
     contentBase: path.join('public'), // 额外的静态文件目录
     // dist 是静态目录，public是额外的静态目录
