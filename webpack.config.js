@@ -5,7 +5,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 require('dotenv').config({ path: '.env' });
 console.log(process.env.NODE_ENV2);
 module.exports = {
-  mode: 'development', // 开发模式
+  // mode: 'development', // 开发模式
+  mode: 'production', // 生产模式
   devtool: false,
   // entry: './src/index.js',
   entry: {
@@ -31,6 +32,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].[contenthash].js',
+    library: "webpackNumbers",
     clean: true, // 每次打包前，清空dist目录下的文件；
   },
   optimization: {
@@ -53,6 +55,11 @@ module.exports = {
   ],
   module: {
     rules: [
+      {
+        test: /\.js$/,
+        include: path.resolve(__dirname, 'src'),
+        loader: 'babel-loader',
+      },
       {
         test: /\.css$/,
         use: [
@@ -135,5 +142,6 @@ module.exports = {
     //  * 答：输入http://localhost:8080之后其实就是访问的dist目录，比如：http://localhost:8080/main.js就会访问dist目录下边的main.js
     //  * / 
     open: true, // 是否打开浏览器进行访问
+    hot: true, // 模块的热更新
   }
 };

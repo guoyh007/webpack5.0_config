@@ -1,8 +1,8 @@
 // import _ from 'lodash';
 // import printMe from './print.js';
 
-// import styles from './index.css';
-// console.log('styles: ', styles);
+import styles from './index.css';
+console.log('styles: ', styles);
 // import './index.less';
 // import './index.scss';
 // import Data from './data.xml';
@@ -45,41 +45,21 @@
 //   document.body.appendChild(component);
 // });
 
-//! vendor打包
-// import _ from 'lodash';
-// import Print from './print';
+import { cube } from "./math";
 
-// function component() {
-//   const element = document.createElement('div');
-
-//   // lodash 是由当前 script 脚本 import 进来的
-//   element.innerHTML = _.join(['Hello', 'webpack'], ' ');
-//   element.onclick = Print.bind(null, 'Hello webpack!');
-
-//   return element;
-// }
-
-// document.body.appendChild(component());
-
-import _ from 'lodash';
-import numRef from './ref.json';
-
-export function numToWord(num) {
-  return _.reduce(
-    numRef,
-    (accum, ref) => {
-      return ref.num === num ? ref.word : accum;
-    },
-    ''
-  );
+if (process.env.NODE_ENV === 'development') {
+  console.log(' @@@', '这特么是生产环境');
 }
 
-export function wordToNum(word) {
-  return _.reduce(
-    numRef,
-    (accum, ref) => {
-      return ref.word === word && word.toLowerCase() ? ref.num : accum;
-    },
-    -1
-  );
+function component() {
+  const element = document.createElement('pre');
+
+  element.innerHTML = [
+    'Hello webpack!',
+    '5 cubed is equal to ' + cube(5)
+  ].join('\n\n');
+  console.log(cube);
+  return element;
 }
+
+document.body.appendChild(component());
