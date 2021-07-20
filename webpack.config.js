@@ -2,14 +2,17 @@ const path = require("path");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+// const CleanWebpackPlugin = require('clean-webpack-plugin');
+// const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 // 读取这个.env这个文件，把配置的key value写到process.env对象里边去
 require('dotenv').config({ path: '.env' });
 console.log(process.env.NODE_ENV2);
 console.log(process.env.NODE_ENV);
 module.exports = {
-  // mode: 'development', // 开发模式
-  mode: 'production', // 生产模式
+  mode: 'development', // 开发模式
+  // mode: 'production', // 生产模式
   devtool: false,
   // entry: './src/index.js',
   entry: {
@@ -49,6 +52,15 @@ module.exports = {
         },
       },
     },
+    minimizer: [
+      // new UglifyJsPlugin({
+      //   cache: true,
+      //   parallel: true,
+      //   sourceMap: true
+      // }),
+      // new TerserJSPlugin({}),
+      new OptimizeCSSAssetsPlugin({})
+    ],
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -64,6 +76,12 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: '[name].css',
     }),
+    // new OptimizeCssAssetsPlugin({
+    //   assetNameRegExp: /\.css$/g, //一个正则表达式，指示应优化\最小化的资产的名称。提供的正则表达式针对配置中ExtractTextPlugin实例导出的文件的文件名运行，而不是源CSS文件的文件名。默认为/\.css$/g
+    //   cssProcessor: require('cssnano'), //用于优化\最小化CSS的CSS处理器，默认为cssnano。这应该是一个跟随cssnano.process接口的函数（接收CSS和选项参数并返回一个Promise）。
+    //   cssProcessorOptions: { safe: true, discardComments: { removeAll: true } }, //传递给cssProcessor的选项，默认为{}
+    //   canPrint: true //一个布尔值，指示插件是否可以将消息打印到控制台，默认为true
+    // }),
   ],
   module: {
     rules: [
