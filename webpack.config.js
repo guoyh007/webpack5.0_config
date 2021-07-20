@@ -1,9 +1,12 @@
 const path = require("path");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const WorkboxPlugin = require('workbox-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 // 读取这个.env这个文件，把配置的key value写到process.env对象里边去
 require('dotenv').config({ path: '.env' });
 console.log(process.env.NODE_ENV2);
+console.log(process.env.NODE_ENV);
 module.exports = {
   // mode: 'development', // 开发模式
   mode: 'production', // 生产模式
@@ -52,6 +55,15 @@ module.exports = {
       title: '管理输出',
       template: './src/index.html',
     }),
+    // new WorkboxPlugin.GenerateSW({
+    //   // 这些选项帮助快速启用 ServiceWorkers
+    //   // 不允许遗留任何“旧的” ServiceWorkers
+    //   clientsClaim: true,
+    //   skipWaiting: true,
+    // }),
+    new MiniCssExtractPlugin({
+      filename: '[name].css',
+    }),
   ],
   module: {
     rules: [
@@ -63,7 +75,10 @@ module.exports = {
       {
         test: /\.css$/,
         use: [
-          'style-loader', // css转化成js
+          // 'style-loader', // css转化成js
+          process.env.NODE_ENV !== 'production'
+            ? 'style-loader'
+            : MiniCssExtractPlugin.loader,
           // 'css-loader', // 即url import进行处理
           {
             loader: 'css-loader',
@@ -79,7 +94,10 @@ module.exports = {
       {
         test: /\.less$/,
         use: [
-          'style-loader', // css转化成js
+          // 'style-loader', // css转化成js
+          process.env.NODE_ENV !== 'production'
+            ? 'style-loader'
+            : MiniCssExtractPlugin.loader,
           'css-loader', // 即url import进行处理
           'less-loader', // 把less转化为css 
         ]
@@ -87,7 +105,10 @@ module.exports = {
       {
         test: /\.scss$/,
         use: [
-          'style-loader', // css转化成js
+          // 'style-loader', // css转化成js
+          process.env.NODE_ENV !== 'production'
+            ? 'style-loader'
+            : MiniCssExtractPlugin.loader,
           'css-loader', // 即url import进行处理
           'sass-loader', // 把less转化为css 
         ]
@@ -117,7 +138,11 @@ module.exports = {
       // * 现在都用 type: 'asset/resource' 这个东西
       {
         test: /\.(png|svg|jpg|jpeg|gif)$/i,
-        type: 'asset/resource',
+        type: 'asset/resource', // 相当于 file-loader
+      },
+      {
+        test: /\.txt/,
+        type: 'asset/source', // 相当于 raw-loader
       },
       //* 处理一些数据文件
       {

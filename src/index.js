@@ -3,19 +3,19 @@
 
 import styles from './index.css';
 console.log('styles: ', styles);
-// import './index.less';
-// import './index.scss';
-// import Data from './data.xml';
-// import Notes from './data.csv';
+import './index.less';
+import './index.scss';
+import Data from './data.xml';
+import Notes from './data.csv';
 
-// console.log('Data: ', Data);
-// console.log('Notes: ', Notes);
+console.log('Data: ', Data);
+console.log('Notes: ', Notes);
 
-// const fs = require('./assets/龙舟.jpg');
-// console.log('fs: ', fs);
-// let img = new Image();
-// img.src = fs;
-// document.body.appendChild(img);
+const fs = require('./assets/龙舟.jpg');
+console.log('fs: ', fs);
+let img = new Image();
+img.src = fs;
+document.body.appendChild(img);
 
 // function component() {
 //   const element = document.createElement('div');
@@ -45,21 +45,21 @@ console.log('styles: ', styles);
 //   document.body.appendChild(component);
 // });
 
-import { cube } from "./math";
+// import { cube } from "./math";
 
-if (process.env.NODE_ENV === 'development') {
-  console.log(' @@@', '这特么是生产环境');
-}
+// if (process.env.NODE_ENV === 'development') {
+//   console.log(' @@@', '这特么是生产环境');
+// }
 
-function component() {
-  const element = document.createElement('pre');
+// function component() {
+//   const element = document.createElement('pre');
 
-  element.innerHTML = [
-    'Hello webpack!',
-    '5 cubed is equal to ' + cube(5)
-  ].join('\n\n');
-  console.log(cube);
-  return element;
-}
+//   element.innerHTML = [
+//     'Hello webpack!',
+//     '5 cubed is equal to ' + cube(5)
+//   ].join('\n\n');
+//   console.log(cube);
+//   return element;
+// }
 
-document.body.appendChild(component());
+// document.body.appendChild(component());
