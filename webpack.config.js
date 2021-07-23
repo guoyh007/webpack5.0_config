@@ -1,40 +1,23 @@
 const path = require("path");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const WorkboxPlugin = require('workbox-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-// const CleanWebpackPlugin = require('clean-webpack-plugin');
-// const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-
+// * 压缩css
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+// * js，这个插件不用装webpack自己有
+const TerserPlugin = require('terser-webpack-plugin');
 // 读取这个.env这个文件，把配置的key value写到process.env对象里边去
 require('dotenv').config({ path: '.env' });
-console.log(process.env.NODE_ENV2);
-console.log(process.env.NODE_ENV);
+console.log("@NODE_ENV", process.env.NODE_ENV);
+
 module.exports = {
-  mode: 'development', // 开发模式
+  // mode: 'development', // 开发模式
   // mode: 'production', // 生产模式
+  mode: 'none', // 设置为none，要不然就会自己选择了
   devtool: false,
   // entry: './src/index.js',
   entry: {
     index: './src/index.js',
   },
-  // tag1配置：可以看到原来的index.bundle.js 和 another-bundle.js 原来分别有1.7万行的代码，现在只有600多行代码，只不过多了一个shared.bundle.js的文件
-  // entry: {
-  //   index: {
-  //     import: './src/index.js',
-  //     dependOn: 'shared',
-  //   },
-  //   another: {
-  //     import: './src/another-module.js',
-  //     dependOn: 'shared',
-  //   },
-  //   shared: 'lodash',
-  // },
-  // output: {
-  //   path: path.resolve(__dirname, 'dist'),
-  //   filename: 'main.js',
-  //   // publicPath: "/assets/", // string
-  // },
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].[contenthash].js',
@@ -52,36 +35,25 @@ module.exports = {
         },
       },
     },
+    minimize: true,
     minimizer: [
-      // new UglifyJsPlugin({
-      //   cache: true,
-      //   parallel: true,
-      //   sourceMap: true
-      // }),
-      // new TerserJSPlugin({}),
-      new OptimizeCSSAssetsPlugin({})
+      new TerserPlugin()
     ],
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: '管理输出',
+      title: 'My App',
       template: './src/index.html',
+      // 压缩产生的html
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+      }
     }),
-    // new WorkboxPlugin.GenerateSW({
-    //   // 这些选项帮助快速启用 ServiceWorkers
-    //   // 不允许遗留任何“旧的” ServiceWorkers
-    //   clientsClaim: true,
-    //   skipWaiting: true,
-    // }),
     new MiniCssExtractPlugin({
-      filename: '[name].css',
+      filename: '[name].[hash: 6].css',
     }),
-    // new OptimizeCssAssetsPlugin({
-    //   assetNameRegExp: /\.css$/g, //一个正则表达式，指示应优化\最小化的资产的名称。提供的正则表达式针对配置中ExtractTextPlugin实例导出的文件的文件名运行，而不是源CSS文件的文件名。默认为/\.css$/g
-    //   cssProcessor: require('cssnano'), //用于优化\最小化CSS的CSS处理器，默认为cssnano。这应该是一个跟随cssnano.process接口的函数（接收CSS和选项参数并返回一个Promise）。
-    //   cssProcessorOptions: { safe: true, discardComments: { removeAll: true } }, //传递给cssProcessor的选项，默认为{}
-    //   canPrint: true //一个布尔值，指示插件是否可以将消息打印到控制台，默认为true
-    // }),
+    new OptimizeCssAssetsPlugin(),
   ],
   module: {
     rules: [
@@ -186,5 +158,8 @@ module.exports = {
     //  * / 
     open: true, // 是否打开浏览器进行访问
     hot: true, // 模块的热更新
+    proxy: {
+      "/api": 'http://localhost:3000',
+    }
   }
 };
